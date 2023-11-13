@@ -1,0 +1,61 @@
+.Header_index{
+    padding: 3em 0;
+    text-align: center;
+    color: #ffffff;
+}
+.content_main{
+    background-color: #ffffff;
+    border-top-left-radius: 5em;
+    border-top-right-radius: 5em;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+.aside_part_main{
+    background: #faf8f5;
+    padding: 1em 10% 1em 5%;
+    height: 100%;
+    width: 100%;
+}
+.tarjeta_saldo{
+    margin-left: 2;
+    background-color: #ffffff;
+    border: 0.0625rem solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.75rem;
+    padding: 2em;
+    margin: 0 .5em 0 10em;
+    color: #252525;
+}
+.tarjeta_saldo h2{
+    font-size: 1.3em;
+    margin-bottom: 1em;
+}
+.tarjeta_saldo h3{
+    font-size: 2em;
+}
+.btn_app_verde{
+    margin-top: 1em;
+    background-color: var(--main-color);
+    color: #ffffff;
+    outline: none;
+    border: none;
+    display: inline-block;
+    padding: .5em 1em;
+    font-size: 1em;
+    text-decoration: none;
+    border-radius: 0.75rem;
+
+}
+.aside_part{
+    margin: 1em 3em;
+}
+.tarjeta_movimiento{
+    border: .0625rem solid rgba(12,12,13,.1);
+    border-radius: .75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+    margin-top: 1em;
+}

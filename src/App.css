@@ -1,0 +1,14 @@
+:root {
+  --main-color: #7cb928;
+  --main-color-oscuro: #279c43;
+  --rojo-color: #FD2103;
+}
+*, ::before, ::after{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box !important;
+}
+body{
+  background: var(--main-color) !important;
+  font-family: 'Poppins', sans-serif !important;
+}

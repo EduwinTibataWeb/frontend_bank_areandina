@@ -1,0 +1,225 @@
+.menu_top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em 4em;
+    list-style: none;
+    width: 100%;
+    z-index: 10;
+    background-color: #fff;
+}
+
+.menu_img{
+    width: 200px;
+    height: 70px;
+    background-image: url(/public/assets/logo.png);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: menu_items 1s ease-out;
+}
+.menu_img img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+.menu_items{
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    transition: all .3s ease;
+}
+.menu_item{
+    text-align: center;
+    position: relative;
+    animation: menu_items 1s ease-out;
+}
+.menu_item a,
+.menu_item p{
+    color: var(--main-color);
+    display: inline-block;
+    padding: 1em 2em;
+    text-decoration: none;
+    margin: 0;
+    cursor: pointer;
+}
+.submenu_top{
+    position: absolute;
+    background: #ffffff;
+    list-style: none;
+    padding: 12px 34px 12px 25px;
+    text-align: left;
+    top: -100;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+}
+.arrow_menu svg{
+    transform:rotate(360deg);
+    transition: all .2s ease-out;
+}
+.submenu_top li a{
+    color: var(--main-color);
+    text-align: left;
+    animation: menu_items 1s ease-out;
+}
+
+.menu_item:hover .submenu_top {
+    display: inherit;
+}
+
+.menu_item:hover .arrow_menu svg{
+    transform:rotate(180deg);
+}
+.item_borde{
+    border: 1px solid #ffffff;
+}
+.icon_menu_top{
+    position: absolute;
+    top: 1.6em;
+    right: 1.6em;
+    width: 50px;
+    height: 30px;
+    display: none;
+    justify-content: space-between;
+    flex-direction: column;
+    cursor: pointer;
+    transition: all .3s ease-in;
+}
+.icon_menu_top div{
+    width: 100%;
+    height: 5px;
+    background-color: var(--main-color);
+    transition: all .3s ease-in;
+    
+}
+.user_login{
+    position: relative;
+}
+.user_login > svg{
+    color: #ffffff;
+    font-size: 2em;
+    cursor: pointer;
+}
+.submenu_login{
+    list-style: none;
+    padding: 1em;
+    margin: 0;
+    background-color: #fff;
+    position: absolute;
+    width: 300px;
+    left: -250px;
+    top: 100%;
+}
+.submenu_item a{
+    color: var(--main-color);
+    padding: 12px 1em;
+    display: inline-block;
+    text-decoration: none;
+}
+.submenu_item{
+    text-align-last: left;
+}
+.submenu_header{
+    text-align: center;
+}
+.submenu_header span{
+    font-size: 0.8em;
+}
+.log-out{
+    cursor: pointer;
+}
+.desactive_iconUser{
+    display: none;
+}
+@media screen and (max-width: 950px) {
+    .menu_top{
+        flex-direction: column;
+        background: #ffffff;
+        padding: 0;
+    }
+    .menu_item p,
+    .menu_item a{
+        color: var(--main-color);
+    }
+    .menu_img{
+        width: 112px;
+        height: 62px;
+        background-image: url(/public/assets/logo.png);
+        margin: 12px;
+    }
+    .menu_items{
+        flex-direction: column;
+        width: 100%;
+    }
+    .submenu_top{
+        position: inherit;
+        text-align: center;
+        padding: 0;
+        border-bottom: 1px solid var(--main-color);
+        background: rgb(247, 247, 247);
+    }
+    .submenu_top li{
+        padding: 0px 0px;
+    }
+    .icon_menu_top{
+        display: flex;
+    }
+    .desactive_menu_items {
+        max-height: 0;
+        overflow: hidden;
+        display: none;
+    }
+    .active_menu_items{
+        max-height: 500px;
+        display: flex;
+    }
+    .item_borde{
+        border: none;
+    }
+    .active_menu_icon{
+        transform: rotateZ(45deg);
+    }
+    .desactive_menu_icon{
+        transform: rotateZ(0);
+    }
+    .active_menu_icon div:first-child{
+        position: absolute;
+        right: 50%;
+        top: 50%;
+        transform: translateX(50%) translateY(-50%);
+    }
+    .active_menu_icon div:nth-child(2){
+        width: 0;
+    }
+    .active_menu_icon div:last-child{
+        position: absolute;
+        right: 0;
+        top: -40%;
+        transform: rotate(-90deg) translateX(-50%) translateY(0%);
+    }
+    .user_login{
+        position: absolute;
+        top: 1.6em;
+        left: 1.6em;
+    }
+    .user_login > svg{
+        color: var(--main-color);
+    }
+    .submenu_login{
+        flex-direction: column;
+        left: -30px;
+    }
+}
+@keyframes menu_items {
+    0%{
+        opacity: 0%;
+        transform: translateY(10px);
+    }100%{
+        opacity: 100%;
+        transform: translateY(0);
+    }
+}
