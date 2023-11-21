@@ -7,7 +7,7 @@ import './PageEnviar.css';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-const urlUsers="http://localhost:9000/api/users"
+const urlUsers="http://localhost:9000/api/usuarios"
 const urltransacciones="http://localhost:9000/api/transacciones"
 
 
@@ -15,19 +15,23 @@ const urltransacciones="http://localhost:9000/api/transacciones"
 class PageEnviar extends Component {
     state={
         form:{
-            ID_Usuario:  '',
-            Saldo: 0
+            Id:  '',
+            Saldo: ''
         },
-        user_1:{
-            ID_Usuario: (cookies.get('ID_Usuario')),
-            Nombre:  (cookies.get('Nombre')),
-            Contrasena: (cookies.get('Contrasena')),
-            Correo:(cookies.get('Correo')),
-            Saldo: (cookies.get('Saldo')),
-            Fecha_Activacion: (cookies.get('Fecha_Activacion'))
+        user_login:{
+            Id:  cookies.get("ID_Usuario"),
+            Saldo: ''
         },
-        data_user_send:{
-            
+        data_user_send:{},
+        estatus: false,
+        trasaccion:{
+            Usuario_origen_id: 0,
+            Usuario_destino_id: 0,
+            Tipo_Movimiento: "consigancion",
+            Fecha_Movimiento: new Date(),
+            Saldo_Anterior: 0,
+            Saldo_Movimiento: 0,
+            Saldo_Disponible: 0
         }
     }
     
@@ -38,59 +42,89 @@ class PageEnviar extends Component {
                 [e.target.name]:e.target.value
             }
         })
+        
         console.log(this.state.form)
     }
 
-    sendMoney=async()=>{
-        let user=this.state.form.ID_Usuario
-        let saldo=this.state.form.Saldo
-        if(user.length<=0 || saldo.length<=0){
-            alert('Se requieren todos los datos')
-            return "Datos Vacios"
-        }
+    sendMoney = async () => {
+        let user = this.state.form.Id;
+        let saldo = this.state.form.Saldo;
         
-        await axios.get(urlUsers+ '/' + user)
-        .then(response=>{
-            return response.data
-        }).then(response=>{
-            var resp=response[0]
-            if(response.length>0){
-                this.setState({data_user_send:resp});
-                this.peticionPost();
-            }else{
-                alert("Verificar Usario y/o Clave")
-            }
-        })
-        .catch(error=>{
-            console.log(error)
-        })
-    }
+        let user_login = this.state.user_login.Id;
 
-    peticionPost = async () => {
+
+        if (!user || !saldo || user == user_login) {
+            alert('Se requieren todos los datos');
+            return "Datos Vacios";
+        }else{
+            this.state.estatus = true;
+        }
+
         try {
-            const user = this.state.form.ID_Usuario;
-            const saldo = Math.floor(this.state.form.Saldo);
-    
-            // Modificar el saldo en el objeto data_user_send
-            this.state.data_user_send.Saldo += saldo;
+            const response = await axios.get(urlUsers + '/' + user);
+            const userData = response.data[0];
 
-            await axios.put(urlUsers + '/' + user, this.state.data_user_send);
+            const response_login = await axios.get(urlUsers + '/' + user_login);
+            const userData_login = response_login.data[0];
+    
+            if (!userData) {
+                alert('No se encontraron datos para el usuario:', user);
+                return;
+            }
             
+            this.setState({ data_user_send: userData, user_login: userData_login }, () => {
+                if(this.state.user_login.Saldo < saldo){
+                    alert('Saldo insuficiente')
+                }else{
+                    this.peticionUpdate();
+                }
+            });
+        } catch (error) {
+            console.log('Error en la solicitud GET:', error);
+        }
+    };
+    
+    peticionUpdate = async () => {
+        try {
+            const user = this.state.form.Id;
+            const saldo = Math.floor(this.state.form.Saldo);
+            
+            let user_login = this.state.user_login.Id;
+            
+            this.state.trasaccion.Usuario_origen_id = user_login * 1;
+            this.state.trasaccion.Usuario_destino_id = user * 1;
+            this.state.trasaccion.Saldo_Anterior = this.state.user_login.Saldo;
+            this.state.trasaccion.Saldo_Movimiento = saldo;
+            
+            const newDataUserSend = { ...this.state.data_user_send, Saldo: this.state.data_user_send.Saldo + saldo };
+            const newDataUserLogin = { ...this.state.user_login, Saldo: this.state.user_login.Saldo - saldo };
+            
+            console.log(newDataUserSend, newDataUserLogin, this.state.trasaccion);
+            
+            this.state.trasaccion.Saldo_Disponible = newDataUserLogin.Saldo;
+
+            await axios.post(urltransacciones, this.state.trasaccion);
+            
+            await axios.put(urlUsers + '/' + user, newDataUserSend);
+            await axios.put(urlUsers + '/' + user_login, newDataUserLogin);
+            
+
         } catch (error) {
             console.error('Error en la solicitud PUT:', error.message);
-            console.error('Detalles del error:', error.response.data);
+            console.error('Detalles del error:', error.response?.data);
         }
-    }
+    };
 
     render(){
         return(
             <>
                 <main className="main_enviar">
+                {(this.state.estatus === false) ?
                     <section className="tarjeta_cedula">
                         <h1>Envia dinero a</h1>
                         <section className="barra_busqueda">
-                            <label htmlFor="ID_Usuario"><FontAwesomeIcon icon={faMagnifyingGlass} /></label>
-                            <input type="number" name="ID_Usuario" id="ID_Usuario" placeholder="C.C.: 1001091881" onChange={this.handleChange}/>
+                            <label htmlFor="Id"><FontAwesomeIcon icon={faMagnifyingGlass} /></label>
+                            <input type="number" name="Id" id="Id" placeholder="C.C.: 1001091881" onChange={this.handleChange}/>
                         </section>
                         <h1>Valor</h1>
                         <section className="barra_busqueda">
@@ -99,10 +133,12 @@ class PageEnviar extends Component {
                         </section>
                         <button className="btn_app_verde" onClick={() => this.sendMoney()}> Enviar <FontAwesomeIcon icon={faArrowRight} /> </button>
                     </section>
+                    :
                     <section className="tarjeta_cedula">
                         <h1>Envio exitoso:</h1>
-                        <button className="btn_app_verde"> Ir al inicio <FontAwesomeIcon icon={faArrowRight} /> </button>
+                        <button className="btn_app_verde"><Link to="/"> Ir al inicio <FontAwesomeIcon icon={faArrowRight} /></Link></button>
                     </section>
+                }
                 </main>
             </>
         )

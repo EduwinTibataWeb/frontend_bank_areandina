@@ -9,7 +9,7 @@
     border-top-right-radius: 5em;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: 100vh;
+    height: 70vh;
     overflow: hidden;
 }
 .aside_part_main{
@@ -47,6 +47,10 @@
     border-radius: 0.75rem;
 
 }
+.btn_app_verde a{
+    text-decoration: none;
+    color: #ffffff;
+}
 .aside_part{
     margin: 1em 3em;
 }
@@ -58,4 +62,14 @@
     align-items: center;
     padding: 1em;
     margin-top: 1em;
+}
+.transacciones_all{
+    height: 300px;
+    overflow:scroll;
+}
+.encontra{
+    color: #ff0000;
+}
+.afavor{
+    color: var(--main-color);
 }

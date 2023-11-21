@@ -1,0 +1,17 @@
+.content_tabla{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    min-height: 100vh;
+}
+.tabla{
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 1200px;
+}
+.tabla_header th,
+.tabla_content td{
+    min-width: 200px;
+}

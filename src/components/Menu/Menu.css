@@ -100,7 +100,7 @@
     position: relative;
 }
 .user_login > svg{
-    color: #ffffff;
+    color: var(--main-color);
     font-size: 2em;
     cursor: pointer;
 }

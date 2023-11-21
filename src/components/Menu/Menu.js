@@ -8,8 +8,7 @@ import Cookies from 'universal-cookie'
 const cookies = new Cookies();
 //Imports - Menu
 
-const url= "http://localhost:9000/api/users"
-const url_deportes= "http://localhost:9000/api/users";
+const url= "http://localhost:9000/api/usuarios"
 //URL BD Deportes - para el Menu 
 
 class Menu extends Component{
@@ -67,28 +66,16 @@ class Menu extends Component{
 
   userLogOut = () =>{
     this.setState({logueado:false})
-    cookies.remove("Correo",{path:"/"})
-    cookies.remove("Nombre",{path:"/"})
-    cookies.remove("Saldo",{path:"/"})
     cookies.remove("ID_Usuario", {path:"/"})
-    cookies.remove("Fecha_Activacion", {path:"/"})
+    cookies.remove("rol", {path:"/"})
     window.location.href='./'
   }
   
 
   // Funciones Para traer la informacion de la BD Deportes
-  peticion_get_deportes= ()=>{
-    axios.get(url_deportes).then(response=>{
-      this.setState({data_deporte:response.data})
-    })
-    .catch(error => {
-      console.log(error.message)
-    }
-    )
-  }
   peticion_get_usuarios= ()=>{
-    axios.get(url).then(response=>{
-      this.setState({data_usuario:response.data})
+    axios.get(url + '/' + cookies.get('ID_Usuario')).then(response=>{
+      this.setState({data_usuario:response.data[0]})
     })
     .catch(error => {
       console.log(error.message)
@@ -98,10 +85,10 @@ class Menu extends Component{
 
   // Funciones Para Inicializar cuando el Dom este listo
   componentDidMount(){
-    this.peticion_get_deportes()
-    this.peticion_get_usuarios()
-    if(cookies.get("usu_nombre")){
+    
+    if(cookies.get("ID_Usuario")){
       this.setState({logueado:true})
+      this.peticion_get_usuarios()
     }else{
         this.setState({logueado:false})
     }
@@ -109,27 +96,52 @@ class Menu extends Component{
 
   render(){
     return(
-        <nav className="menu_top">
-          <div className="menu_img">
-          </div>
-          <ul className={`menu_items ${this.state.menu}`}>
-            <li className="menu_item">
-              <Link to='/'>Inicio</Link>
-            </li>
-            <li className="menu_item">
-              <Link to='/PageEnviar'>Enviar</Link>
-            </li>
-            <li className="menu_item" onClick={this.userLogOut}>
-              <a>Cerrar sesión</a>  
-            </li>
-          </ul>
-          
-          <div className={`icon_menu_top ${this.state.icon}`} onClick={this.menuActive}>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-        </nav>
+      <nav className="menu_top">
+      <div className="menu_img">
+      </div>
+      <ul className={`menu_items ${this.state.menu}`}>
+        <li className="menu_item">
+          <Link to='/'>INICIO</Link>
+        </li>
+        
+      </ul>
+      {this.state.logueado
+      ?<div className={`user_login ${this.state.logueado}`}>
+        <FontAwesomeIcon  onClick={this.userLogActive} icon={faCircleUser}/>
+        <ul className={`submenu_login ${this.state.iconUser}`}>
+            <li className="submenu_header">{this.state.data_usuario.Nombre}<br/> <span>{this.state.data_usuario.rol}</span> </li>
+            <hr/>
+            {(this.state.data_usuario.rol === "admin" || this.state.data_usuario.rol === "sa")?
+            <>
+            <li className="submenu_item"><Link to='/PageUsuarios'> <FontAwesomeIcon icon={faUserPlus}/> Administrador de usuarios </Link></li>
+            <li className="submenu_item"><Link to='/PageTransacciones'> <FontAwesomeIcon icon={faCirclePlus}/> A. de transacciones </Link></li>
+            
+            <hr/>
+            </>
+            :<>
+            <li className="submenu_item"><FontAwesomeIcon icon={faFaceSmile} /> Bienvenido</li>
+            <hr/></>
+          }
+            <li className="submenu_item log-out" onClick={this.userLogOut}><FontAwesomeIcon icon={faPowerOff}/> Cerrar sesión</li>
+        </ul>
+      </div>
+      : <ul className={`menu_items ${this.state.menu} `}>
+          <li className="menu_item">
+            <Link to='/PageSesion'>Iniciar sesión</Link>
+          </li>
+          <li className="menu_item item_borde">
+            <Link to='/PageRegistro'>Registrarse</Link>
+          </li>
+        </ul>
+      }
+      
+      <div className={`icon_menu_top ${this.state.icon}`} onClick={this.menuActive}>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </nav>
+        
         )
   }
 

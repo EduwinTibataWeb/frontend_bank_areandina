@@ -5,7 +5,7 @@ import Cookies from 'universal-cookie'
 import axios from 'axios'
 
 
-const urlRegsitro="http://localhost:9000/api/users"
+const urlRegsitro="http://localhost:9000/api/usuarios"
 
 
 const cookies = new Cookies();
@@ -18,8 +18,9 @@ class PageRegistro extends Component {
             Saldo:0, 
             Correo:'',  
             Contrasena:'',
-            ID_Usuario:'',
-            Fecha_Activacion: new Date()
+            Id:'',
+            rol:'user',
+            Fecha_Activacion: new Date(),
         },
     }
 
@@ -39,24 +40,20 @@ class PageRegistro extends Component {
 
     suscribirse=async()=>{
         let nombre=this.state.form.Nombre;
-        let saldo=this.state.form.Saldo;
+        let rol=this.state.form.rol;
         let email=this.state.form.Correo;
         let contrasena=this.state.form.Contrasena;
 
         let fechaHora = new Date();
 
-        let id=this.state.form.ID_Usuario
+        let id=this.state.form.Id
         
         if(nombre.length<=0 || contrasena.length<=0 || email.length<=0){
             alert('Se requieren todos los datos')
             return "Algunos o Todos Los Estan Datos Vacios"
         }else{
-            cookies.set("Correo",email,{path:"/"})
-            cookies.set("Nombre",nombre,{path:"/"})
-            cookies.set("Saldo",saldo,{path:"/"})
-            cookies.set("Contrasena",contrasena,{path:"/"})
             cookies.set("ID_Usuario",id, {path:"/"})
-            cookies.set("Fecha_Activacion",fechaHora, {path:"/"})
+            cookies.set("rol",rol, {path:"/"})
         }
 
         await axios
@@ -79,8 +76,8 @@ class PageRegistro extends Component {
                 <h2> Registro </h2>
               </div>
               <form className="formulario_form">
-                <label htmlFor='ID_Usuario'>Cedula</label>
-                <input type="number" name="ID_Usuario" id='ID_Usuario' onChange={this.handleChange}></input>
+                <label htmlFor='Id'>Cedula</label>
+                <input type="number" name="Id" id='Id' onChange={this.handleChange}></input>
                 <label htmlFor='Correo'>Correo</label>
                 <input type="email" name="Correo" id='Correo' onChange={this.handleChange}></input>
                 <label htmlFor='Contrasena'>Contraseña</label>
